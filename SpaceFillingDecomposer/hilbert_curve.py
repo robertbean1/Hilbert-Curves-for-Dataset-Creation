@@ -89,14 +89,23 @@ def visualized_dataset(dataset):
         pix[n, 2] = (0, 0, int(blue*255))
     return im
 
+def extend_curve(compost):
+    order = int(log(len(compost)**(1/2), 2))
+    curve = gen_curve(order)
+    im = Image.new('RGB', (int(len(compost)**(0.5)), int(len(compost)**(0.5))))
+    pix = im.load()
+    for y, row in enumerate(curve):
+        for x, index in enumerate(row):
+            pix[x, y] = compost[index]
+    return im
+
 if __name__ == '__main__':
     I = Image.open('forest.jpg')
     compost = decompose(I)
     pretty = render_decomposed(compost)
     pretty.save('compost_forest.png')
-    pretty.show()
-
-
+    ressurected = extend_curve(compost)
+    ressurected.show()
     data = create_dataset(compost)
     visualized_dataset(data).save('compost_forest_dataset.png')
 
